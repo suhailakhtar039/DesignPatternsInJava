@@ -9,13 +9,15 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class APICalling {
-    public static void parseObject(JSONObject json, String key){
-        System.out.println(json.get(key));
+    public static String parseObject(JSONObject json, String key){
+        return json.get(key).toString();
     }
-    public static void getKey(JSONObject json, String key){
+    public static String getKey(JSONObject json, String key){
         boolean exists = json.has(key);
         Iterator<?> keys = json.keys();
         String nextKeys;
@@ -24,22 +26,23 @@ public class APICalling {
                 nextKeys = (String) keys.next();
                 try {
                     if (json.get(nextKeys) instanceof JSONObject) {
-                        System.out.println("object " + nextKeys);
-                        getKey(json.getJSONObject(nextKeys),key);
+                        return getKey(json.getJSONObject(nextKeys),key);
                     } else if (json.get(nextKeys) instanceof JSONArray) {
-                        System.out.println("array " + nextKeys);
-                    } else {
-                        System.out.println("key-value pair " + nextKeys);
+                        JSONArray jsonArray = json.getJSONArray(nextKeys);
+                        for(int i=0; i<jsonArray.length(); i++){
+                            String jsonArrayString = jsonArray.get(i).toString();
+                            JSONObject innerJSONObject = new JSONObject(jsonArrayString);
+                            return getKey(innerJSONObject,key);
+                        }
                     }
                 } catch (Exception e) {
                     System.out.println("Exception " + e);
                 }
             }
-            JSONArray jsonArray = json.getJSONArray("data");
-            System.out.println(jsonArray);
         }else{
-            parseObject(json,key);
+            return parseObject(json,key);
         }
+        return "-1";
     }
     private static HttpURLConnection connection;
     public static void main(String[] args) {
@@ -75,11 +78,13 @@ public class APICalling {
             String data = new String(responseContent);
             JSONObject json = new JSONObject(data);
 
-            JSONArray jsonArray = new JSONArray(json.getJSONArray("data").toString());
-//            jsonArray = json.getJSONArray("data");
-            System.out.println(jsonArray);
+            JSONArray jsonArray = json.getJSONArray("data");
+//            System.out.println(jsonArray);
 
-            getKey(json,"total_pages");
+            String ans = getKey(json,"topLevelDomain");
+            List<String> arrayList = List.of(ans);
+            System.out.println(ans);
+            System.out.println(arrayList);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
