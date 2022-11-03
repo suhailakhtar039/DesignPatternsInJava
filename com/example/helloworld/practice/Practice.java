@@ -2,7 +2,18 @@ package com.example.helloworld.practice;
 
 import java.math.BigDecimal;
 import java.util.*;
+class Employee1{
+    int a;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || this.getClass() != o.getClass()) return false;
+        Employee1 employee1 = (Employee1) o;
+        return a == employee1.a;
+    }
+
+}
 public class Practice {
     public static int[] findPerm(int A, long B) {
         ArrayList<Integer> arrayList = new ArrayList<>();
@@ -40,13 +51,21 @@ public class Practice {
         }
     }
 
+    public static void change(Employee1 e1){
+        e1.a = 5;
+    }
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int a, b;
-        a = sc.nextInt();
-        b = sc.nextInt();
-        int[] a1 = findPerm(a, b);
-        for(int i:a1)
-            System.out.println(i);
+        Employee1 e1 = new Employee1();
+        e1.a = 1;
+        Employee1 e2 = new Employee1();
+        e2.a = 1;
+        if(e1.equals(e2))
+            System.out.println("equals");
+        else{
+            System.out.println(e1.hashCode());
+            System.out.println(e2.hashCode());
+        }
+        change(e1);
+        System.out.println(e1.a);
     }
 }

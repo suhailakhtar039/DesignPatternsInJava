@@ -7,7 +7,9 @@ interface Cycles {
 }
 
 interface Bikes{
-    int increment(int x);
+    int x = 0;
+    int increment();
+    void printX();
 
     //default methods
     default void print(){
@@ -28,8 +30,13 @@ class Bases{
 class Hero extends Bases implements Cycles,Bikes {
 
     @Override
-    public int increment(int x) {
+    public int increment() {
         return x + 1;
+    }
+
+    @Override
+    public int increment(int x) {
+        return 0;
     }
 
     @Override
@@ -42,10 +49,20 @@ class Hero extends Bases implements Cycles,Bikes {
         super.foo();
         System.out.println("Whats up");
     }
+
+    @Override
+    public void printX() {
+        System.out.println(x);
+    }
 }
 
 public class Interfaces {
     public static void main(String[] args) {
+        Bases b = new Hero();
+        b.foo();
+        Bikes b1 = new Hero();
+        int x = 4;
+        b1.increment();
         Hero c = new Hero();
         int a=4;
         System.out.println(c.increment(a));
