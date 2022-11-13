@@ -1,4 +1,4 @@
-package com.example.helloworld.DesignPatterns;
+package com.example.helloworld.DesignPatterns.SOLID;
 
 import java.io.File;
 import java.io.FileNotFoundException;
