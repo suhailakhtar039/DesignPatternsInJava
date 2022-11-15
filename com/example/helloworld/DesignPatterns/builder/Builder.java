@@ -1,4 +1,4 @@
-package com.example.helloworld.DesignPatterns;
+package com.example.helloworld.DesignPatterns.builder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -66,7 +66,7 @@ class HtmlBuilder{
     }
 }
 
-class Person{
+class PersonTest {
     public String name;
     public String position;
 
@@ -80,13 +80,13 @@ class Person{
 }
 
 class PersonBuilder<SELF extends  PersonBuilder<SELF>> {
-    protected Person person = new Person();
+    protected PersonTest personTest = new PersonTest();
     public SELF withName(String name){
-        person.name = name;
+        personTest.name = name;
         return self();
     }
-    public Person build(){
-        return person;
+    public PersonTest build(){
+        return personTest;
     }
     protected SELF self(){
         return (SELF)this;
@@ -94,7 +94,7 @@ class PersonBuilder<SELF extends  PersonBuilder<SELF>> {
 }
 class EmployeeBuilder extends PersonBuilder<EmployeeBuilder>{
     public EmployeeBuilder worksAt(String position){
-        person.position = position;
+        personTest.position = position;
         return self();
     }
 
@@ -129,11 +129,11 @@ public class Builder {
 
     // Person Builder
         PersonBuilder pb = new PersonBuilder();
-        Person suhail = pb.withName("Suhail").build();
+        PersonTest suhail = pb.withName("Suhail").build();
 
         // Using Generics
         EmployeeBuilder pb1 = new EmployeeBuilder();
-        Person akhtar = pb1.withName("Suhail")
+        PersonTest akhtar = pb1.withName("Suhail")
                 .worksAt("Deutsche Bank")
                 .build();
         System.out.println(akhtar);
