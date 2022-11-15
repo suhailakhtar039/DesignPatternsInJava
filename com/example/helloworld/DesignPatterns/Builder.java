@@ -65,6 +65,44 @@ class HtmlBuilder{
         return root.toString();
     }
 }
+
+class Person{
+    public String name;
+    public String position;
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", position='" + position + '\'' +
+                '}';
+    }
+}
+
+class PersonBuilder<SELF extends  PersonBuilder<SELF>> {
+    protected Person person = new Person();
+    public SELF withName(String name){
+        person.name = name;
+        return self();
+    }
+    public Person build(){
+        return person;
+    }
+    protected SELF self(){
+        return (SELF)this;
+    }
+}
+class EmployeeBuilder extends PersonBuilder<EmployeeBuilder>{
+    public EmployeeBuilder worksAt(String position){
+        person.position = position;
+        return self();
+    }
+
+    @Override
+    protected EmployeeBuilder self() {
+        return this;
+    }
+}
 public class Builder {
     public static void main(String[] args) {
 //        Simple example
@@ -82,10 +120,22 @@ public class Builder {
         System.out.println(sb);
 
 //      Using Custom examples
+//      Fluent Builders
         HtmlBuilder builder = new HtmlBuilder("ul");
         builder.addChild("li","hello")
                 .addChild("li","world")
                 .addChild("li","what");
         System.out.println(builder);
+
+    // Person Builder
+        PersonBuilder pb = new PersonBuilder();
+        Person suhail = pb.withName("Suhail").build();
+
+        // Using Generics
+        EmployeeBuilder pb1 = new EmployeeBuilder();
+        Person akhtar = pb1.withName("Suhail")
+                .worksAt("Deutsche Bank")
+                .build();
+        System.out.println(akhtar);
     }
 }
