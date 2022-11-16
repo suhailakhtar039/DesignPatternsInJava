@@ -1,4 +1,4 @@
-package com.example.helloworld.DesignPatterns.builder;
+package com.example.helloworld.DesignPatterns.Creational.Builder;
 
 class Person{
     // address
