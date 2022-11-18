@@ -3,70 +3,151 @@ package com.example.helloworld.DesignPatterns.Creational.Factory;
 import javafx.util.Pair;
 import org.reflections.Reflections;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.lang.reflect.*;
-import java.util.Set;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.util.*;
 
-interface HotDrink {
+interface IHotDrink
+{
     void consume();
 }
 
-class Tea implements HotDrink {
+class Tea implements IHotDrink
+{
     @Override
-    public void consume() {
-        System.out.println("This Tea is good!!");
+    public void consume()
+    {
+        System.out.println("This tea is nice but I'd prefer it with milk.");
     }
 }
 
-class Coffee implements HotDrink {
+class Coffee implements IHotDrink
+{
     @Override
-    public void consume() {
-        System.out.println("This coffee is good!!!!!!!!!!");
+    public void consume()
+    {
+        System.out.println("This coffee is delicious");
     }
 }
 
-interface HotDrinkFactory {
-    HotDrink prepare(int amount);
+interface IHotDrinkFactory
+{
+    IHotDrink prepare(int amount);
 }
 
-class TeaFactory implements HotDrinkFactory {
+class TeaFactory implements IHotDrinkFactory
+{
     @Override
-    public HotDrink prepare(int amount) {
-        System.out.println("Preparing TEA factory with amount = " + amount);
+    public IHotDrink prepare(int amount)
+    {
+        System.out.println(
+                "Put in tea bag, boil water, pour "
+                        + amount + "ml, add lemon, enjoy!"
+        );
         return new Tea();
     }
 }
 
-class CoffeeFactory implements HotDrinkFactory{
+class CoffeeFactory implements IHotDrinkFactory
+{
+
     @Override
-    public HotDrink prepare(int amount) {
-        System.out.println("Preparing COFFEE factory with amount = " + amount);
+    public IHotDrink prepare(int amount)
+    {
+        System.out.println(
+                "Grind some beans, boil water, pour "
+                        + amount + " ml, add cream and sugar, enjoy!"
+        );
         return new Coffee();
     }
 }
 
-class HotDrinkMachine{
-    private List<Pair<String,HotDrinkFactory>> namedFactories = new ArrayList<>();
-    public HotDrinkMachine() throws Exception {
-        Set<Class<? extends HotDrinkFactory>> types = new Reflections("")
-                .getSubTypesOf(HotDrinkFactory.class);
-        for (Class<? extends HotDrinkFactory> type:types){
+class HotDrinkMachine
+{
+    public enum AvailableDrink
+    {
+        COFFEE, TEA
+    }
+
+    private Map<AvailableDrink, IHotDrinkFactory> factories =
+            new HashMap<>();
+
+    private List<Pair<String, IHotDrinkFactory>> namedFactories =
+            new ArrayList<>();
+
+    public HotDrinkMachine() throws Exception
+    {
+        // option 1: use an enum
+        // for (AvailableDrink drink : AvailableDrink.values())
+        // {
+        //     String s = drink.toString();
+        //     String factoryName = "" + Character.toUpperCase(s.charAt(0)) + s.substring(1).toLowerCase();
+        //     Class<?> factory = Class.forName("com.activemesa.creational.factories." + factoryName + "Factory");
+        //     factories.put(drink, (IHotDrinkFactory) factory.getDeclaredConstructor().newInstance());
+        // }
+
+        // option 2: find all implementors of IHotDrinkFactory
+        Set<Class<? extends IHotDrinkFactory>> types =
+                new Reflections("com.example.helloworld.DesignPatterns.Creational.Factory") // ""
+                        .getSubTypesOf(IHotDrinkFactory.class);
+        for (Class<? extends IHotDrinkFactory> type : types)
+        {
             namedFactories.add(new Pair<>(
-                    type.getSimpleName().replace("Factory",""),
+                    type.getSimpleName().replace("Factory", ""),
                     type.getDeclaredConstructor().newInstance()
             ));
         }
     }
-    public HotDrink makeDrink() throws Exception {
-        System.out.println("Available Drinks: ");
-        for(int i = 0; i<namedFactories.size(); i++){
-            Pair<String, HotDrinkFactory> item = namedFactories.get(i);
-            System.out.println( i +" : "+item.getKey());
+
+    public IHotDrink makeDrink() throws IOException
+    {
+        System.out.println("Available drinks");
+        for (int index = 0; index < namedFactories.size(); ++index)
+        {
+            Pair<String, IHotDrinkFactory> item = namedFactories.get(index);
+            System.out.println("" + index + ": " + item.getKey());
         }
 
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        while (true)
+        {
+            String s;
+            int i, amount;
+            if ((s = reader.readLine()) != null
+                    && (i = Integer.parseInt(s)) >= 0
+                    && i < namedFactories.size())
+            {
+                System.out.println("Specify amount: ");
+                s = reader.readLine();
+                if (s != null
+                        && (amount = Integer.parseInt(s)) > 0)
+                {
+                    return namedFactories.get(i).getValue().prepare(amount);
+                }
+            }
+            System.out.println("Incorrect input, try again.");
+        }
+    }
+
+    public IHotDrink makeDrink(AvailableDrink drink, int amount)
+    {
+        return ((IHotDrinkFactory)factories.get(drink)).prepare(amount);
     }
 }
 
-public class AbstractFactory {
+class AbstractFactory
+{
+    public static void main(String[] args) throws Exception
+    {
+        HotDrinkMachine machine = new HotDrinkMachine();
+        IHotDrink tea = machine.makeDrink(HotDrinkMachine.AvailableDrink.TEA, 200);
+        tea.consume();
+
+        // interactive
+        IHotDrink drink = machine.makeDrink();
+        drink.consume();
+    }
 }
+
