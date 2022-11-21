@@ -26,6 +26,17 @@ class LazySingleton {
     }
 }
 
+//simple class as compared to above
+class InnerStaticSingleton{
+    private InnerStaticSingleton(){}
+    private static class Impl{
+        private static final InnerStaticSingleton INSTANCE = new InnerStaticSingleton();
+    }
+    public InnerStaticSingleton getInstance(){
+        return Impl.INSTANCE;
+    }
+}
+
 public class LazyInitiaAndThreadSafety {
     public static void main(String[] args) {
 
