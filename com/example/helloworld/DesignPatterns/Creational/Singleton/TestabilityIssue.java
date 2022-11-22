@@ -11,11 +11,15 @@ import java.util.Hashtable;
 import java.util.List;
 
 import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
+interface Database {
+    int getPopulation(String name);
+}
 
-class SingletonDatabase {
+class SingletonDatabase implements Database {
     private Dictionary<String, Integer> capitals = new
             Hashtable<>();
     private static int instanceCount = 0;
@@ -48,6 +52,7 @@ class SingletonDatabase {
         return INSTANCE;
     }
 
+    @Override
     public int getPopulation(String name) {
         return capitals.get(name);
     }
@@ -63,13 +68,52 @@ class SingletonRecordFinder {
     }
 }
 
-class Tests{
-    @Test
-    public void singletonPopulationTest(){
+class ConfigurableRecordFinder {
+    private Database database;
+
+    public ConfigurableRecordFinder(Database database) {
+        this.database = database;
+    }
+
+    public int getTotalPopulation(List<String> names) {
+        int result = 0;
+        for (String name : names) {
+            result += database.getPopulation(name);
+        }
+        return result;
+    }
+}
+
+class DummyDatabase implements Database {
+
+    private Dictionary<String, Integer> data = new Hashtable<>();
+
+    public DummyDatabase() {
+        data.put("alpha", 1);
+        data.put("beta", 2);
+        data.put("gamma", 3);
+    }
+
+    @Override
+    public int getPopulation(String name) {
+        return data.get(name);
+    }
+}
+
+class Tests {
+    @Test//not a unit test
+    public void singletonPopulationTest() {
         SingletonRecordFinder rf = new SingletonRecordFinder();
         List<String> names = List.of("Delhi", "Tokyo");
         int tp = rf.getTotalPopulation(names);
-        assertEquals(2+4+6,tp);
+        assertEquals(2 + 4 + 6, tp);
+    }
+
+    @Test
+    public void dependentPopulationTest(){
+        DummyDatabase db = new DummyDatabase();
+        ConfigurableRecordFinder rf = new ConfigurableRecordFinder(db);
+        assertEquals(4,rf.getTotalPopulation(List.of("alpha", "gamma")));
     }
 }
 
