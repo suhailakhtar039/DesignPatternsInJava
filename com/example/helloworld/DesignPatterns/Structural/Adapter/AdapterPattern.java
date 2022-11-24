@@ -1,4 +1,4 @@
-package com.example.helloworld.DesignPatterns.Structural;
+package com.example.helloworld.DesignPatterns.Structural.Adapter;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -122,7 +122,7 @@ class LineToPointAdapter implements Iterable<Point> {
     }
 }
 
-public class StructuralDemo {
+public class AdapterPattern {
 
     private final static List<VectorObject> vectorObjects = new ArrayList<>(
             Arrays.asList(
@@ -135,7 +135,7 @@ public class StructuralDemo {
         for (VectorObject vo : vectorObjects) {
             for (Line line : vo) {
                 LineToPointAdapter adapter = new LineToPointAdapter(line);
-                adapter.forEach(StructuralDemo::drawPoint);
+                adapter.forEach(AdapterPattern::drawPoint);
             }
         }
     }
