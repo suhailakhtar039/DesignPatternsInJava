@@ -1,5 +1,11 @@
 package com.example.helloworld.DesignPatterns.Structural.Bridge;
 
+
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+
 interface Renderer {
     void renderCircle(float radius);
 }
@@ -30,6 +36,7 @@ abstract class Shape{
 
 class Circle extends Shape{
     public float radius;
+    @Inject
     public Circle(Renderer renderer) {
         super(renderer);
     }
@@ -48,11 +55,24 @@ class Circle extends Shape{
     }
 }
 
+class ShapeModule extends AbstractModule {
+    @Override
+    protected void configure(){
+        bind(Renderer.class).to(VectorRenderer.class);
+    }
+}
+
 public class BridgePattern {
     public static void main(String[] args) {
-        RasterRenderer raster = new RasterRenderer();
-        VectorRenderer vector = new VectorRenderer();
-        Circle circle = new Circle(vector, 5);
-        circle.draw();
+        // RasterRenderer raster = new RasterRenderer();
+        // VectorRenderer vector = new VectorRenderer();
+        // Circle circle = new Circle(vector, 5);
+        // circle.draw();
+        Injector injector = Guice.createInjector(new ShapeModule());
+        Circle instance = injector.getInstance(Circle.class);
+        instance.radius = 3;
+        instance.draw();
+        instance.resize(2);
+        instance.draw();
     }
 }
