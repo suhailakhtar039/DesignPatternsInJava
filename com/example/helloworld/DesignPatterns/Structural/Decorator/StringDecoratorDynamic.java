@@ -1,17 +1,17 @@
 package com.example.helloworld.DesignPatterns.Structural.Decorator;
 
-interface Shape {
+interface ShapeDynamic {
     String info();
 }
 
-class Circle implements Shape {
+class CircleDynamic implements ShapeDynamic {
 
     private float radius;
 
-    public Circle() {
+    public CircleDynamic() {
     }
 
-    public Circle(float radius) {
+    public CircleDynamic(float radius) {
         this.radius = radius;
     }
 
@@ -25,13 +25,13 @@ class Circle implements Shape {
     }
 }
 
-class Square implements Shape {
+class SquareDynamic implements ShapeDynamic {
     private float side;
 
-    public Square() {
+    public SquareDynamic() {
     }
 
-    public Square(float side) {
+    public SquareDynamic(float side) {
         this.side = side;
     }
 
@@ -42,12 +42,12 @@ class Square implements Shape {
 }
 
 // making a decorator
-class ColoredShape implements Shape {
+class ColoredShapeDynamic implements ShapeDynamic {
 
-    private Shape shape;
+    private ShapeDynamic shape;
     private String color;
 
-    public ColoredShape(Shape shape, String color) {
+    public ColoredShapeDynamic(ShapeDynamic shape, String color) {
         this.shape = shape;
         this.color = color;
     }
@@ -58,12 +58,12 @@ class ColoredShape implements Shape {
     }
 }
 
-class TransparentShape implements Shape{
+class TransparentShapeDynamic implements ShapeDynamic {
 
-    private Shape shape;
+    private ShapeDynamic shape;
     private int transparency;
 
-    public TransparentShape(Shape shape, int transparency) {
+    public TransparentShapeDynamic(ShapeDynamic shape, int transparency) {
         this.shape = shape;
         this.transparency = transparency;
     }
@@ -74,22 +74,22 @@ class TransparentShape implements Shape{
     }
 }
 
-public class StringDecoratorShape {
+public class StringDecoratorDynamic {
     public static void main(String[] args) {
-        Circle circle = new Circle(10);
+        CircleDynamic circle = new CircleDynamic(10);
         System.out.println(circle.info());
 
-        ColoredShape blueSquare = new ColoredShape(new Square(10), "blue");
+        ColoredShapeDynamic blueSquare = new ColoredShapeDynamic(new SquareDynamic(10), "blue");
         System.out.println(blueSquare.info());
 
-        TransparentShape transparentCircle = new TransparentShape(new Circle(8), 75);
+        TransparentShapeDynamic transparentCircle = new TransparentShapeDynamic(new CircleDynamic(8), 75);
         System.out.println(transparentCircle.info());
 
-        TransparentShape greenTransparentCircle = new TransparentShape(
-                new ColoredShape(new Square(20), "green"), 50
+        TransparentShapeDynamic greenTransparentCircle = new TransparentShapeDynamic(
+                new ColoredShapeDynamic(new SquareDynamic(20), "green"), 50
         );
         System.out.println(greenTransparentCircle.info());
-        TransparentShape transparentShapeWithinTransparentShape = new TransparentShape(new TransparentShape(new Circle(44), 90), 10);
+        TransparentShapeDynamic transparentShapeWithinTransparentShape = new TransparentShapeDynamic(new TransparentShapeDynamic(new CircleDynamic(44), 90), 10);
         System.out.println(transparentShapeWithinTransparentShape.info());
     }
 }
