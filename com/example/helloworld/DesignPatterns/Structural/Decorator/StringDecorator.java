@@ -9,12 +9,25 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-class MagicString{
+class MagicString {
     private String string;
 
     public MagicString(String string) {
         this.string = string;
     }
+
+    public long getNumberOfVowels() {
+        return string.chars()
+                .mapToObj(c -> (char) c)
+                .filter(c -> "aeiou".contains(c.toString()))
+                .count();
+    }
+
+    @Override
+    public String toString() {
+        return string;
+    }
+
     //========================delegate methods==============
     public int length() {
         return string.length();
@@ -276,6 +289,9 @@ class MagicString{
 
 public class StringDecorator {
     public static void main(String[] args) {
-
+        MagicString s = new MagicString("hello");
+        System.out.println(s.getNumberOfVowels());
+        String a = "hello";
+        System.out.println(a.chars());
     }
 }
