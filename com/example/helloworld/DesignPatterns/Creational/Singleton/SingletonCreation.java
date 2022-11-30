@@ -51,6 +51,9 @@ public class SingletonCreation {
         // 2. serialization
 
         BasicSingleton singleton = BasicSingleton.getInstance();
+        System.out.println(singleton);
+        BasicSingleton instance = BasicSingleton.getInstance();
+        System.out.println(instance);
         singleton.setVal(123);
 
         String fileName = "demo.txt";
