@@ -1,4 +1,4 @@
-package com.example.helloworld;
+package com.example.helloworld.RandomPractice;
 
 import java.util.ArrayList;
 import java.util.List;

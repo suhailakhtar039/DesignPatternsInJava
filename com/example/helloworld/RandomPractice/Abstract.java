@@ -1,4 +1,4 @@
-package com.example.helloworld;
+package com.example.helloworld.RandomPractice;
 
 abstract class Base1{
     Base1(){

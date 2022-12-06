@@ -1,4 +1,4 @@
-package com.example.helloworld;
+package com.example.helloworld.RandomPractice;
 
 interface SampleInterface{
     void meth1();

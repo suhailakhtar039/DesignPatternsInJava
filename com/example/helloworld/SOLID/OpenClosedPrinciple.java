@@ -1,4 +1,4 @@
-package com.example.helloworld.DesignPatterns.SOLID;
+package com.example.helloworld.SOLID;
 
 import java.util.Arrays;
 import java.util.List;
